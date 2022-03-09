@@ -1,0 +1,33 @@
+{
+  "name": "eth-storage-contract",
+  "version": "1.0.0",
+  "description": "The storage contract on ETH chain",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crustio/eth-storage-contract.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crustio/eth-storage-contract/issues"
+  },
+  "homepage": "https://github.com/crustio/eth-storage-contract#readme",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-waffle": "^2.0.2",
+    "chai": "^4.3.6",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.5.4",
+    "hardhat": "^2.8.4"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.5.0",
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v2-periphery": "^1.1.0-beta.0",
+    "@uniswap/v3-periphery": "^1.4.0"
+  }
+}
