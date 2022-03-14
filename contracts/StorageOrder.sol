@@ -8,6 +8,7 @@ interface IERC20 {
     function allowance(address owner, address spender) external view returns (uint);
     function transfer(address _to, uint _value) external;
     function transferFrom(address from, address to, uint256 amount) external returns (bool);
+    function decimals() external view returns (uint);
 }
 
 contract StorageOrder {
@@ -17,11 +18,11 @@ contract StorageOrder {
     address internal constant WETH_ADDRESS = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     IUniswapV2Router02 public uniswapRouter;
     IUniswapV2Factory public uniswapFactory;
+    IERC20 public cruToken;
     address payable public owner;
     uint public basePrice;
     uint public bytePrice;
     uint public chainStatusPrice;
-    uint public CRUUNIT = 10 ** 12;
     mapping(address => bool) public tokens;
     mapping(address => bool) public nodes;
     address[] tokenArray;
@@ -34,6 +35,7 @@ contract StorageOrder {
         owner = payable(msg.sender);
         uniswapRouter = IUniswapV2Router02(UNISWAP_ROUTER_ADDRESS);
         uniswapFactory = IUniswapV2Factory(uniswapRouter.factory());
+        cruToken = IERC20(CRU_ADDRESS);
         tokens[CRU_ADDRESS] = true;
         tokenArray.push(CRU_ADDRESS);
     }
@@ -87,14 +89,14 @@ contract StorageOrder {
     }
 
     function getPrice(uint size) public view returns (uint price) {
-        uint cruAmount = basePrice + size * bytePrice / 1024 / 1024 + chainStatusPrice;
-        return getEstimated(cruAmount, WETH_ADDRESS) / CRUUNIT;
+        uint cruAmount = basePrice + size * bytePrice / (1024**2)  + chainStatusPrice;
+        return getEstimated(cruAmount, WETH_ADDRESS);
     }
 
     function getPriceInERC20(address tokenAddress, uint size) public view returns (uint price) {
         require(tokens[tokenAddress], "Unsupported token");
-        uint cruAmount = basePrice + size * bytePrice / 1024 / 1024 + chainStatusPrice;
-        return getEstimated(cruAmount, tokenAddress) / CRUUNIT;
+        uint cruAmount = basePrice + size * bytePrice / (1024**2)  + chainStatusPrice;
+        return getEstimated(cruAmount, tokenAddress);
     }
 
     function placeOrder(string calldata cid, uint size) external payable {
@@ -156,18 +158,20 @@ contract StorageOrder {
             return (0, false);
 
         (uint reserve1, uint reserve2) = UniswapV2Library.getReserves(uniswapRouter.factory(), tokenAddress, CRU_ADDRESS);
-        uint numerator = reserve1 * amount * 1000 * 10 ** 12;
+        IERC20 token1 = IERC20(tokenAddress);
+        uint numerator = reserve1 * amount * 1000 * (10**(cruToken.decimals() - token1.decimals()));
         uint denominator = (reserve2 - amount) * 997;
         return ((numerator / denominator) + 1, true);
     }
 
     function getEstimatedETHforToken(uint amount, address tokenAddress) public view returns (uint val, bool success) {
         (uint reserve1, uint reserve2) = UniswapV2Library.getReserves(uniswapRouter.factory(), uniswapRouter.WETH(), tokenAddress);
-        uint nAmount = amount * 10 ** 18;
-        uint numerator = reserve1 * nAmount * 1000;
+        IERC20 token1 = IERC20(uniswapRouter.WETH());
+        IERC20 token2 = IERC20(tokenAddress);
+        uint nAmount = amount * (10**token2.decimals());
+        uint numerator = reserve1 * nAmount * 1000 * (10**(token2.decimals() - token1.decimals()));
         uint denominator = (reserve2 - nAmount) * 997;
-        uint amountIn = (numerator / denominator) + 1;
-        return (amountIn, true);
+        return ((numerator / denominator) + 1, true);
     }
 
     function getRandomNode(string memory cid) internal view returns (address) {

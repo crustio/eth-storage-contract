@@ -24,7 +24,7 @@ describe("StorageOrder", function () {
     const addNodeTx = await storageOrder.addOrderNode(account1.address);
     addNodeTx.wait();
     // Set order price
-    const setOrderPriceTx = await storageOrder.setOrderPrice(10, 10000, 10000);
+    const setOrderPriceTx = await storageOrder.setOrderPrice(10**7, 10**10, 10**10);
     setOrderPriceTx.wait();
   });
 
