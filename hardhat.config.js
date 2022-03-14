@@ -24,6 +24,14 @@ module.exports = {
       }
     }
   },
-  solidity: "0.8.4",
-  solidity: "0.6.6",
+  solidity: {
+    compilers: [
+      {
+        version: "0.6.6",
+      },
+      {
+        version: "0.8.4",
+      },
+    ]
+  }
 };

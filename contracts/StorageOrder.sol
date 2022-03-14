@@ -1,95 +1,141 @@
-//SPDX-License-Identifier: Unlicense
+//SPDX-License-Identifier: UnLicensed
 pragma solidity 0.6.6;
 import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol';
 import '@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol';
 import '@uniswap/v2-periphery/contracts/libraries/UniswapV2Library.sol';
 
-interface IToken {
-    //function balanceOf(address _owner) external view returns(uint);
+interface IERC20 {
+    function allowance(address owner, address spender) external view returns (uint);
     function transfer(address _to, uint _value) external;
-    //event Transfer(address indexed _from, address indexed _to, uint _value);
+    function transferFrom(address from, address to, uint256 amount) external returns (bool);
 }
 
 contract StorageOrder {
 
     address internal constant UNISWAP_ROUTER_ADDRESS = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
-    address internal constant UNISWAP_FACTORY_ADDRESS = 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f;
     address internal constant CRU_ADDRESS = 0x32a7C02e79c4ea1008dD6564b35F131428673c41;
+    address internal constant WETH_ADDRESS = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     IUniswapV2Router02 public uniswapRouter;
     IUniswapV2Factory public uniswapFactory;
     address payable public owner;
     uint public basePrice;
     uint public bytePrice;
+    uint public chainStatusPrice;
+    uint public CRUUNIT = 10 ** 12;
     mapping(address => bool) public tokens;
     mapping(address => bool) public nodes;
+    address[] tokenArray;
+    address[] nodeArray;
 
-    event Order(string cid, uint size, uint price, address tokenAddress);
-    event OrderWithNode(string cid, uint size, uint price, address tokenAddress, address nodeAddress);
+    event Order(string cid, uint size, uint price, address nodeAddress);
+    event OrderInERC20(string cid, uint size, uint price, address tokenAddress, address nodeAddress);
 
     constructor() public {
         owner = payable(msg.sender);
         uniswapRouter = IUniswapV2Router02(UNISWAP_ROUTER_ADDRESS);
-        uniswapFactory = IUniswapV2Factory(UNISWAP_FACTORY_ADDRESS);
+        uniswapFactory = IUniswapV2Factory(uniswapRouter.factory());
+        tokens[CRU_ADDRESS] = true;
+        tokenArray.push(CRU_ADDRESS);
     }
 
     modifier onlyOwner {
         require(
             msg.sender == owner,
-            "Only owner can call this function."
+            "Only owner can call this function"
         );
         _;
     }
 
     function addSupportedToken(address tokenAddress) public onlyOwner {
-        require(tokens[tokenAddress] == false, "Token already added.");
+        require(tokens[tokenAddress] == false, "Token already added");
         tokens[tokenAddress] = true;
+        tokenArray.push(tokenAddress);
     }
 
     function addOrderNode(address nodeAddress) public onlyOwner {
-        require(nodes[nodeAddress] == false, "Node already added.");
+        require(nodes[nodeAddress] == false, "Node already added");
         nodes[nodeAddress] = true;
+        nodeArray.push(nodeAddress);
     }
 
-    function setOrderPrice(uint basePrice_, uint bytePrice_) public onlyOwner {
+    function removeSupportedToken(address tokenAddress) public onlyOwner {
+        require(tokens[tokenAddress], "Token not exist");
+        delete tokens[tokenAddress];
+        for (uint i = 0; i < tokenArray.length; i++) {
+            if (tokenArray[i] == tokenAddress) {
+                delete tokenArray[i];
+                break;
+            }
+        }
+    }
+    
+    function removeOrderNode(address nodeAddress) public onlyOwner {
+        require(nodes[nodeAddress], "Node not exist");
+        delete nodes[nodeAddress];
+        for (uint i = 0; i < nodeArray.length; i++) {
+            if (nodeArray[i] == nodeAddress) {
+                delete nodeArray[i];
+                break;
+            }
+        }
+    }
+
+    function setOrderPrice(uint basePrice_, uint bytePrice_, uint chainStatusPrice_) public onlyOwner {
         basePrice = basePrice_;
         bytePrice = bytePrice_;
+        chainStatusPrice = chainStatusPrice_;
     }
 
-    function getPriceInToken(address tokenAddress, uint size) public view returns (uint price) {
-        require(tokens[tokenAddress], "Unsupported token.");
-        uint cruAmount = basePrice + size * bytePrice;
-        return getEstimated(cruAmount, tokenAddress);
+    function getPrice(uint size) public view returns (uint price) {
+        uint cruAmount = basePrice + size * bytePrice / 1024 / 1024 + chainStatusPrice;
+        return getEstimated(cruAmount, WETH_ADDRESS) / CRUUNIT;
     }
 
-    function placeOrder(string calldata cid, uint size, address tokenAddress) external {
-        require(tokens[tokenAddress], "Unsupported token.");
-
-        uint price = getPriceInToken(tokenAddress, size);
-
-        IToken token = IToken(tokenAddress);
-        token.transfer(owner, price);
-
-        emit Order(cid, size, price, tokenAddress);
+    function getPriceInERC20(address tokenAddress, uint size) public view returns (uint price) {
+        require(tokens[tokenAddress], "Unsupported token");
+        uint cruAmount = basePrice + size * bytePrice / 1024 / 1024 + chainStatusPrice;
+        return getEstimated(cruAmount, tokenAddress) / CRUUNIT;
     }
 
-    function placeOrderWithNode(string calldata cid, uint size, address tokenAddress, address nodeAddress) external {
-        require(tokens[tokenAddress], "Unsupported token.");
-
-        require(nodes[nodeAddress], "Unsupported node.");
-
-        uint price = getPriceInToken(tokenAddress, size);
-        IToken token = IToken(tokenAddress);
-        token.transfer(nodeAddress, price);
-        emit OrderWithNode(cid, size, price, tokenAddress, nodeAddress);
+    function placeOrder(string calldata cid, uint size) external payable {
+        placeOrderWithNode(cid, size, getRandomNode(cid));
     }
 
-    function getEstimated(uint amount, address tokenAddress) public view returns (uint) {
+    function placeOrderWithNode(string memory cid, uint size, address nodeAddress) public payable {
+        require(nodes[nodeAddress], "Unsupported node");
+
+        uint price = getPrice(size);
+        require(msg.value >= price, "No enough ETH to place order");
+        payable(nodeAddress).transfer(price);
+        // Refund left ETH
+        if (msg.value > price)
+            payable(msg.sender).transfer(msg.value - price);
+        emit Order(cid, size, price, nodeAddress);
+    }
+
+    function placeOrderInERC20(string calldata cid, uint size, address tokenAddress) external payable {
+        placeOrderInERC20WithNode(cid, size, tokenAddress, getRandomNode(cid));
+    }
+
+    function placeOrderInERC20WithNode(string memory cid, uint size, address tokenAddress, address nodeAddress) public payable {
+        require(tokens[tokenAddress], "Unsupported token");
+        require(nodes[nodeAddress], "Unsupported node");
+
+        uint price = getPriceInERC20(tokenAddress, size);
+        IERC20 token = IERC20(tokenAddress);
+        require(token.allowance(msg.sender, address(this)) >= price, "No enough token approved");
+        token.transferFrom(msg.sender, nodeAddress, price);
+
+        emit OrderInERC20(cid, size, price, tokenAddress, nodeAddress);
+    }
+
+    function getEstimated(uint amount, address tokenAddress) internal view returns (uint) {
         (uint val0, bool success0) = getTokenInCRUDirectly(amount, tokenAddress);
         if (success0)
             return val0;
 
         (uint val1, bool success1) = getTokenInCRUIndirectly(amount, tokenAddress);
-        require(success1, "Cannot get price.");
+        require(success1, "Get price failed");
         return val1;
     }
 
@@ -99,9 +145,9 @@ contract StorageOrder {
 
     function getTokenInCRUIndirectly(uint amount, address tokenAddress) public view returns (uint val, bool success) {
         (uint tokenAmount, bool success0) = getEstimatedETHforToken(1, tokenAddress);
-        require(success0, "Swap token price to ETH failed.");
+        require(success0, "Swap token price to ETH failed");
         (uint cruAmount, bool success1) = getEstimatedETHforToken(1, CRU_ADDRESS);
-        require(success1, "Swap CRU price to ETH failed.");
+        require(success1, "Swap CRU price to ETH failed");
         return (amount * cruAmount / tokenAmount, true);
     }
 
@@ -122,5 +168,11 @@ contract StorageOrder {
         uint denominator = (reserve2 - nAmount) * 997;
         uint amountIn = (numerator / denominator) + 1;
         return (amountIn, true);
+    }
+
+    function getRandomNode(string memory cid) internal view returns (address) {
+        require(nodeArray.length > 0, "No node to choose");
+        uint nodeID = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, cid))) % nodeArray.length;
+        return nodeArray[nodeID];
     }
 }
