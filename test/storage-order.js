@@ -84,7 +84,9 @@ describe("StorageOrder", function () {
     it("Should palce order with ERC20", async function () {
       // Deploy MINEToken
       const MINEToken = await hre.ethers.getContractFactory("MINEToken");
-      const mineToken = await MINEToken.deploy(10**12);
+      const etherUnit = ethers.utils.parseEther("1");
+      const mintNum = etherUnit.mul(10**9);
+      const mineToken = await MINEToken.deploy(mintNum);
       await mineToken.deployed();
       const mineTokenAddress = mineToken.address;
       //console.log("MINEToken deployed to:", mineTokenAddress);
@@ -97,8 +99,9 @@ describe("StorageOrder", function () {
       //console.log("TokenLiquidity deployed to:", tokenLiquidityAddress);
 
       // Add MINEToken liquidity in uniswap
-      await mineToken.approve(tokenLiquidityAddress, 10000);
-      await tokenLiquidity.addLiquidityETH(10000, mineTokenAddress, {value: 200});
+      let mineNum = etherUnit.mul(10000);
+      await mineToken.approve(tokenLiquidityAddress, mineNum);
+      await tokenLiquidity.addLiquidityETH(mineNum, mineTokenAddress, {value: ethers.utils.parseEther('100')});
 
       // Add token
       const addTokenTx = await storageOrder.addSupportedToken(mineTokenAddress);
