@@ -146,9 +146,9 @@ contract StorageOrder {
     }
 
     function getTokenInCRUIndirectly(uint amount, address tokenAddress) public view returns (uint val, bool success) {
-        (uint tokenAmount, bool success0) = getEstimatedETHforToken(1, tokenAddress);
+        (uint tokenAmount, bool success0) = getEstimatedETHforUnitToken(tokenAddress);
         require(success0, "Swap token price to ETH failed");
-        (uint cruAmount, bool success1) = getEstimatedETHforToken(1, CRU_ADDRESS);
+        (uint cruAmount, bool success1) = getEstimatedETHforUnitToken(CRU_ADDRESS);
         require(success1, "Swap CRU price to ETH failed");
         return (amount * cruAmount / tokenAmount, true);
     }
@@ -164,13 +164,13 @@ contract StorageOrder {
         return ((numerator / denominator) + 1, true);
     }
 
-    function getEstimatedETHforToken(uint amount, address tokenAddress) public view returns (uint val, bool success) {
+    function getEstimatedETHforUnitToken(address tokenAddress) public view returns (uint val, bool success) {
         (uint reserve1, uint reserve2) = UniswapV2Library.getReserves(uniswapRouter.factory(), uniswapRouter.WETH(), tokenAddress);
         IERC20 token1 = IERC20(uniswapRouter.WETH());
         IERC20 token2 = IERC20(tokenAddress);
-        uint nAmount = amount * (10**token2.decimals());
-        uint numerator = reserve1 * nAmount * 1000 * (10**(token2.decimals() - token1.decimals()));
-        uint denominator = (reserve2 - nAmount) * 997;
+        uint amount = 10**token2.decimals();
+        uint numerator = reserve1 * amount * 1000 * (10**(token2.decimals() - token1.decimals()));
+        uint denominator = (reserve2 - amount) * 997;
         return ((numerator / denominator) + 1, true);
     }
 
