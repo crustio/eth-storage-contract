@@ -25,7 +25,6 @@ contract StorageOrder {
     uint public chainStatusPrice;
     mapping(address => bool) public tokens;
     mapping(address => bool) public nodes;
-    address[] tokenArray;
     address[] nodeArray;
 
     event Order(string cid, uint size, uint price, address nodeAddress);
@@ -37,7 +36,6 @@ contract StorageOrder {
         uniswapFactory = IUniswapV2Factory(uniswapRouter.factory());
         cruToken = IERC20(CRU_ADDRESS);
         tokens[CRU_ADDRESS] = true;
-        tokenArray.push(CRU_ADDRESS);
     }
 
     modifier onlyOwner {
@@ -51,7 +49,6 @@ contract StorageOrder {
     function addSupportedToken(address tokenAddress) public onlyOwner {
         require(tokens[tokenAddress] == false, "Token already added");
         tokens[tokenAddress] = true;
-        tokenArray.push(tokenAddress);
     }
 
     function addOrderNode(address nodeAddress) public onlyOwner {
@@ -63,12 +60,6 @@ contract StorageOrder {
     function removeSupportedToken(address tokenAddress) public onlyOwner {
         require(tokens[tokenAddress], "Token not exist");
         delete tokens[tokenAddress];
-        for (uint i = 0; i < tokenArray.length; i++) {
-            if (tokenArray[i] == tokenAddress) {
-                delete tokenArray[i];
-                break;
-            }
-        }
     }
     
     function removeOrderNode(address nodeAddress) public onlyOwner {
@@ -99,7 +90,7 @@ contract StorageOrder {
         return getEstimated(cruAmount, tokenAddress);
     }
 
-    function placeOrder(string calldata cid, uint size) external payable {
+    function placeOrder(string memory cid, uint size) public payable {
         placeOrderWithNode(cid, size, getRandomNode(cid));
     }
 
@@ -115,7 +106,7 @@ contract StorageOrder {
         emit Order(cid, size, price, nodeAddress);
     }
 
-    function placeOrderInERC20(string calldata cid, uint size, address tokenAddress) external {
+    function placeOrderInERC20(string memory cid, uint size, address tokenAddress) public {
         placeOrderInERC20WithNode(cid, size, tokenAddress, getRandomNode(cid));
     }
 
