@@ -115,11 +115,11 @@ contract StorageOrder {
         emit Order(cid, size, price, nodeAddress);
     }
 
-    function placeOrderInERC20(string calldata cid, uint size, address tokenAddress) external payable {
+    function placeOrderInERC20(string calldata cid, uint size, address tokenAddress) external {
         placeOrderInERC20WithNode(cid, size, tokenAddress, getRandomNode(cid));
     }
 
-    function placeOrderInERC20WithNode(string memory cid, uint size, address tokenAddress, address nodeAddress) public payable {
+    function placeOrderInERC20WithNode(string memory cid, uint size, address tokenAddress, address nodeAddress) public {
         require(tokens[tokenAddress], "Unsupported token");
         require(nodes[nodeAddress], "Unsupported node");
 
@@ -141,11 +141,11 @@ contract StorageOrder {
         return val1;
     }
 
-    function getTokenInCRUDirectly(uint amount, address tokenAddress) public view returns (uint val, bool success) {
+    function getTokenInCRUDirectly(uint amount, address tokenAddress) internal view returns (uint val, bool success) {
         return getEstimatedTokenforCRU(amount, tokenAddress);
     }
 
-    function getTokenInCRUIndirectly(uint amount, address tokenAddress) public view returns (uint val, bool success) {
+    function getTokenInCRUIndirectly(uint amount, address tokenAddress) internal view returns (uint val, bool success) {
         (uint tokenAmount, bool success0) = getEstimatedETHforUnitToken(tokenAddress);
         require(success0, "Swap token price to ETH failed");
         (uint cruAmount, bool success1) = getEstimatedETHforUnitToken(CRU_ADDRESS);
@@ -153,7 +153,7 @@ contract StorageOrder {
         return (amount * cruAmount / tokenAmount, true);
     }
 
-    function getEstimatedTokenforCRU(uint amount, address tokenAddress) public view returns (uint val, bool success) {
+    function getEstimatedTokenforCRU(uint amount, address tokenAddress) internal view returns (uint val, bool success) {
         if (uniswapFactory.getPair(CRU_ADDRESS, tokenAddress) == address(0))
             return (0, false);
 
@@ -164,7 +164,7 @@ contract StorageOrder {
         return ((numerator / denominator) + 1, true);
     }
 
-    function getEstimatedETHforUnitToken(address tokenAddress) public view returns (uint val, bool success) {
+    function getEstimatedETHforUnitToken(address tokenAddress) internal view returns (uint val, bool success) {
         (uint reserve1, uint reserve2) = UniswapV2Library.getReserves(uniswapRouter.factory(), uniswapRouter.WETH(), tokenAddress);
         IERC20 token1 = IERC20(uniswapRouter.WETH());
         IERC20 token2 = IERC20(tokenAddress);
