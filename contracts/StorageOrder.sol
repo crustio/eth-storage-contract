@@ -156,6 +156,9 @@ contract StorageOrder {
     }
 
     function getEstimatedETHforUnitToken(address tokenAddress) internal view returns (uint val, bool success) {
+        if (uniswapFactory.getPair(uniswapRouter.WETH(), tokenAddress) == address(0))
+            return (0, false);
+
         (uint reserve1, uint reserve2) = UniswapV2Library.getReserves(uniswapRouter.factory(), uniswapRouter.WETH(), tokenAddress);
         IERC20 token1 = IERC20(uniswapRouter.WETH());
         IERC20 token2 = IERC20(tokenAddress);
