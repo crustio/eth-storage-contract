@@ -40,19 +40,19 @@ For more information about hardhat, please refer to [hardhat doc](https://hardha
 ### Usage
 
 Functions for contract owner:
-1. **addSupportedToken(address tokenAddress)**: Add supported token.
-1. **addOrderNode(address nodeAddress)**: Add order node which will order and pin files.
-1. **removeSupportedToken(address tokenAddress)**: Remove supported token.
-1. **removeOrderNode(address nodeAddress)**: Remove order node.
-1. **setOrderPrice(uint basePrice_, uint bytePrice_, uint chainStatusPrice_)**: Set price.
+1. **addSupportedToken**: Add supported token.
+1. **addOrderNode**: Add order node which will order and pin files.
+1. **removeSupportedToken**: Remove supported token.
+1. **removeOrderNode**: Remove order node.
+1. **setOrderPrice**: Set price.
 
 Functions for users:
-1. **getPrice(uint size)**: Get price in ETH for file size specified by parameter "size".
-1. **getPriceInERC20(address tokenAddress, uint size)**: Get price in ERC20 specified by "tokenAddress" for file size specified by "size"
-1. **placeOrder(string cid, uint size)**: Place order with cid and size in ETH, msg.value indicates the price user should pay for pinning node.
-1. **placeOrderWithNode(string cid, uint size, address nodeAddress)**: Same like placeOrder, the difference is that the pinning node is fixed by nodeAddress.
-1. **placeOrderInERC20(string cid, uint size, address tokeAddress)**: Place order with cid and size in ERC20 specified by tokenAddress.
-1. **placeOrderInERC20WithNode(string cid, uint size, address tokenAddress, address nodeAddress)**: Same like placeOrderInERC20, the difference is that the pinning node is fixed by nodeAddress.
+1. **getPrice**: Get price in ETH for file size specified by parameter "size".
+1. **getPriceInERC20**: Get price in ERC20 specified by "tokenAddress" for file size specified by "size"
+1. **placeOrder**: Place order with cid and size in ETH, msg.value indicates the price user should pay for pinning node.
+1. **placeOrderWithNode**: Same like placeOrder, the difference is that the pinning node is fixed by nodeAddress.
+1. **placeOrderInERC20**: Place order with cid and size in ERC20 specified by tokenAddress.
+1. **placeOrderInERC20WithNode**: Same like placeOrderInERC20, the difference is that the pinning node is fixed by nodeAddress.
 
 js examples:
 ```shell
