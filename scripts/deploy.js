@@ -12,10 +12,11 @@ async function main() {
   // If this script is run directly using `node` you may want to call compile
   // manually to make sure everything is compiled
   // await hre.run('compile');
+  const etherUnit = ethers.utils.parseEther("1");
 
   // We get the contract to deploy
   const MINEToken = await hre.ethers.getContractFactory("MINEToken");
-  const mineToken = await MINEToken.deploy(10**12);
+  const mineToken = await MINEToken.deploy(etherUnit.mul(1000000));
   await mineToken.deployed();
   console.log("MINEToken deployed to:", mineToken.address);
 
