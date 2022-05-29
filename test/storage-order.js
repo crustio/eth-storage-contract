@@ -17,15 +17,17 @@ describe("StorageOrder", function () {
     // Get the ContractFactory and Signers here.
     const StorageOrder = await hre.ethers.getContractFactory("StorageOrder");
     [owner, account1, account2, ...accounts] = await ethers.getSigners();
-    storageOrder = await StorageOrder.deploy();
+    storageOrder = await StorageOrder.deploy(10**7, 10**10, 50, 512*1024*1024);
     await storageOrder.deployed();
     //console.log("storageOrder deployed to:", storageOrder.address);
     // Add node
     const addNodeTx = await storageOrder.addOrderNode(account1.address);
     addNodeTx.wait();
+    /*
     // Set order price
-    const setOrderPriceTx = await storageOrder.setOrderPrice(10**7, 10**10, 10**10);
+    const setOrderPriceTx = await storageOrder.setOrderPrice(10**7, 10**10);
     setOrderPriceTx.wait();
+    */
   });
 
   describe("Node operation", function () {

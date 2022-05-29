@@ -22,20 +22,27 @@ contract StorageOrder {
     address payable public owner;
     uint public basePrice;
     uint public bytePrice;
-    uint public chainStatusPrice;
+    uint public sizeLimit;
+    uint public servicePriceRate;
     mapping(address => bool) public tokens;
     mapping(address => bool) public nodes;
-    address[] nodeArray;
+    address[] public tokenArray;
+    address[] public nodeArray;
 
-    event Order(string cid, uint size, uint price, address nodeAddress);
-    event OrderInERC20(string cid, uint size, uint price, address tokenAddress, address nodeAddress);
+    event Order(address customer, address merchant, string cid, uint size, uint price);
+    event OrderInERC20(address customer, address merchant, string cid, uint size, uint price, address token);
 
-    constructor() public {
+    constructor(uint basePrice_, uint bytePrice_, uint servicePriceRate_, uint sizeLimit_) public {
         owner = payable(msg.sender);
         uniswapRouter = IUniswapV2Router02(UNISWAP_ROUTER_ADDRESS);
         uniswapFactory = IUniswapV2Factory(uniswapRouter.factory());
         cruToken = IERC20(CRU_ADDRESS);
         tokens[CRU_ADDRESS] = true;
+        tokenArray.push(CRU_ADDRESS);
+        basePrice = basePrice_;
+        bytePrice = bytePrice_;
+        servicePriceRate = servicePriceRate_;
+        sizeLimit = sizeLimit_;
     }
 
     modifier onlyOwner {
@@ -49,6 +56,7 @@ contract StorageOrder {
     function addSupportedToken(address tokenAddress) public onlyOwner {
         require(tokens[tokenAddress] == false, "Token already added");
         tokens[tokenAddress] = true;
+        tokenArray.push(tokenAddress);
     }
 
     function addOrderNode(address nodeAddress) public onlyOwner {
@@ -60,33 +68,52 @@ contract StorageOrder {
     function removeSupportedToken(address tokenAddress) public onlyOwner {
         require(tokens[tokenAddress], "Token not exist");
         delete tokens[tokenAddress];
+        uint len = tokenArray.length;
+        for (uint i = 0; i < len; i++) {
+            if (tokenArray[i] == tokenAddress) {
+                tokenArray[i] = tokenArray[len-1];
+                tokenArray.pop();
+                break;
+            }
+        }
     }
     
     function removeOrderNode(address nodeAddress) public onlyOwner {
         require(nodes[nodeAddress], "Node not exist");
         delete nodes[nodeAddress];
-        for (uint i = 0; i < nodeArray.length; i++) {
+        uint len = nodeArray.length;
+        for (uint i = 0; i < len; i++) {
             if (nodeArray[i] == nodeAddress) {
-                delete nodeArray[i];
+                nodeArray[i] = nodeArray[len-1];
+                nodeArray.pop();
                 break;
             }
         }
     }
 
-    function setOrderPrice(uint basePrice_, uint bytePrice_, uint chainStatusPrice_) public onlyOwner {
+    function setOrderPrice(uint basePrice_, uint bytePrice_) public onlyOwner {
         basePrice = basePrice_;
         bytePrice = bytePrice_;
-        chainStatusPrice = chainStatusPrice_;
+    }
+
+    function setServicePriceRate(uint servicePriceRate_) public onlyOwner {
+        servicePriceRate = servicePriceRate_;
+    }
+
+    function setSizeLimit(uint sizeLimit_) public onlyOwner {
+        sizeLimit = sizeLimit_;
     }
 
     function getPrice(uint size) public view returns (uint price) {
-        uint cruAmount = basePrice + size * bytePrice / (1024**2)  + chainStatusPrice;
+        require(sizeLimit >= size, "Size exceeds the limit");
+        uint cruAmount = (basePrice + size * bytePrice / (1024**2)) * (servicePriceRate + 100) / 100;
         return getEstimated(cruAmount, WETH_ADDRESS);
     }
 
     function getPriceInERC20(address tokenAddress, uint size) public view returns (uint price) {
+        require(sizeLimit >= size, "Size exceeds the limit");
         require(tokens[tokenAddress], "Unsupported token");
-        uint cruAmount = basePrice + size * bytePrice / (1024**2)  + chainStatusPrice;
+        uint cruAmount = (basePrice + size * bytePrice / (1024**2)) * (servicePriceRate + 100) / 100;
         return getEstimated(cruAmount, tokenAddress);
     }
 
@@ -95,6 +122,7 @@ contract StorageOrder {
     }
 
     function placeOrderWithNode(string memory cid, uint size, address nodeAddress) public payable {
+        require(sizeLimit >= size, "Size exceeds the limit");
         require(nodes[nodeAddress], "Unsupported node");
 
         uint price = getPrice(size);
@@ -103,7 +131,7 @@ contract StorageOrder {
         // Refund left ETH
         if (msg.value > price)
             payable(msg.sender).transfer(msg.value - price);
-        emit Order(cid, size, price, nodeAddress);
+        emit Order(msg.sender, nodeAddress, cid, size, price);
     }
 
     function placeOrderInERC20(string memory cid, uint size, address tokenAddress) public {
@@ -111,6 +139,7 @@ contract StorageOrder {
     }
 
     function placeOrderInERC20WithNode(string memory cid, uint size, address tokenAddress, address nodeAddress) public {
+        require(sizeLimit >= size, "Size exceeds the limit");
         require(tokens[tokenAddress], "Unsupported token");
         require(nodes[nodeAddress], "Unsupported node");
 
@@ -119,7 +148,7 @@ contract StorageOrder {
         require(token.allowance(msg.sender, address(this)) >= price, "No enough token approved");
         token.transferFrom(msg.sender, nodeAddress, price);
 
-        emit OrderInERC20(cid, size, price, tokenAddress, nodeAddress);
+        emit OrderInERC20(msg.sender, nodeAddress, cid, size, price, tokenAddress);
     }
 
     function getEstimated(uint amount, address tokenAddress) internal view returns (uint) {
