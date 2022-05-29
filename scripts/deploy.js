@@ -15,22 +15,40 @@ async function main() {
   const etherUnit = ethers.utils.parseEther("1");
 
   // We get the contract to deploy
-  const MINEToken = await hre.ethers.getContractFactory("MINEToken");
-  const mineToken = await MINEToken.deploy(etherUnit.mul(1000000));
-  await mineToken.deployed();
-  console.log("MINEToken deployed to:", mineToken.address);
+  const mineTokenInst = await hre.ethers.getContractFactory("MINEToken");
+  const mineTokenSC = await mineTokenInst.deploy(etherUnit.mul(1000000));
+  await mineTokenSC.deployed();
+  console.log("MINEToken deployed to:", mineTokenSC.address);
 
   // Deploy TokenLiquidity
-  const TokenLiquidity = await hre.ethers.getContractFactory("TokenLiquidity");
-  const tokenLiquidity = await TokenLiquidity.deploy();
-  await tokenLiquidity.deployed();
-  console.log("TokenLiquidity deployed to:", tokenLiquidity.address);
+  const tokenLiquidityInst = await hre.ethers.getContractFactory("TokenLiquidity");
+  const tokenLiquiditySC = await tokenLiquidityInst.deploy();
+  await tokenLiquiditySC.deployed();
+  console.log("TokenLiquidity deployed to:", tokenLiquiditySC.address);
 
   // We get the contract to deploy
-  const StorageOrder = await hre.ethers.getContractFactory("StorageOrder");
-  const storageOrder = await StorageOrder.deploy();
-  await storageOrder.deployed();
-  console.log("storageOrder deployed to:", storageOrder.address);
+  const storageOrderInst = await hre.ethers.getContractFactory("StorageOrder");
+  const storageOrderSC = await storageOrderInst.deploy(10**15, 10**11, 50, 536870912);
+  await storageOrderSC.deployed();
+  console.log("storageOrder deployed to:", storageOrderSC.address);
+
+  // ----- Initialize storage order smart contract ----- //
+  // Add token
+  const addTokenTx = await storageOrderSC.addSupportedToken(mineTokenSC.address);
+  addTokenTx.wait();
+  // Add node
+  const nodeAddr = "0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199";
+  const addNodeTx = await storageOrderSC.addOrderNode(nodeAddr);
+  addNodeTx.wait();
+  // Set price
+  const setOrderPriceTx = await storageOrderSC.setOrderPrice(10, 10000);
+  setOrderPriceTx.wait();
+  // Add liquidity
+  const minetokenAmount = etherUnit.mul(10000);
+  const minetokenApproveTx = await mineTokenSC.approve(tokenLiquiditySC.address, minetokenAmount);
+  minetokenApproveTx.wait();
+  const addLiquidityTx = await tokenLiquiditySC.addLiquidityETH(minetokenAmount, mineTokenSC.address, {value: ethers.utils.parseEther("100")});
+  addLiquidityTx.wait();
 }
 
 // We recommend this pattern to be able to use async/await everywhere

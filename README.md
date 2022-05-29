@@ -45,6 +45,8 @@ Functions for contract owner:
 1. **removeSupportedToken**: Remove supported token.
 1. **removeOrderNode**: Remove order node.
 1. **setOrderPrice**: Set price.
+1. **setServicePriceRate**: Set price rate which indicates service price rate.
+1. **setSizeLimit**: Set size limit.
 
 Functions for users:
 1. **getPrice**: Get price in ETH for file size specified by parameter "size".
