@@ -4,7 +4,7 @@ pragma solidity >=0.8.12;
 // Import this file to use console.log
 import "./Xcm.sol";
 
-contract StorageOrderShiden {
+contract StorageOrderAstar {
 
     // https://docs.astar.network/docs/xcm/building-with-xcm/xc-reserve-transfer/
     address internal constant SDN_ADDRESS = 0x0000000000000000000000000000000000000000;
@@ -144,7 +144,7 @@ contract StorageOrderShiden {
     }
 
     // set the correponding address on crust shadow of this contract
-    function setAddress(string memory addr) public onlyOwner {
+    function setCorrAddress(string memory addr) public onlyOwner {
         corrAddress = bytes32(fromHex(addr));
     }
 
@@ -167,7 +167,7 @@ contract StorageOrderShiden {
         return basePrice + size * bytePrice / (1024**2) + preSendAmount;
     }
 
-    function placeCrossChainOrder(string memory cid, uint64 size) public payable {
+    function placeOrder(string memory cid, uint64 size) public payable {
         require(sizeLimit >= size, "Size exceeds the limit");
 
         uint price = getPrice(size);
