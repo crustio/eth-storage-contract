@@ -1,9 +1,13 @@
 node_modules
-.env
 coverage
 coverage.json
 typechain
+*.lock
+*-lock*
+img
 
 #Hardhat files
 cache
 artifacts
+cache-zk
+artifacts-zk

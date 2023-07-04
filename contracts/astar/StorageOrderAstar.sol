@@ -162,16 +162,23 @@ contract StorageOrderAstar {
         sizeLimit = sizeLimit_;
     }
 
-    function getPrice(uint size) public view returns (uint price) {
+    function getPrice(uint size, bool isPermanent) public view returns (uint price) {
         require(sizeLimit >= size, "Size exceeds the limit");
-        return basePrice + size * bytePrice / (1024**2) + preSendAmount;
+        price = basePrice + size * bytePrice / (1024**2) + preSendAmount;
+
+        if (isPermanent)
+            price = price * 200;
+
+        return price;
     }
 
-    function placeOrder(string memory cid, uint64 size) public payable {
+    function placeOrder(string memory cid, uint64 size, bool isPermanent) public payable {
         require(sizeLimit >= size, "Size exceeds the limit");
 
-        uint price = getPrice(size);
+        uint price = getPrice(size, isPermanent);
         require(msg.value >= price, "No enough SDN to place order");
+        if (msg.value > price)
+            payable(msg.sender).transfer(msg.value - price);
 
         uint256 parachainId = 2012;
         // Transfer the SDN through XCMP
