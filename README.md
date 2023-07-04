@@ -37,10 +37,10 @@ For more information about hardhat, please refer to [hardhat doc](https://hardha
 
 You can use Remix tool to deploy storage contract to most EVM chains, but for zkSync you must follow the steps:
 
-1. Change the ***defaultNetwork*** parameter in ***hardhat.config.ts*** to ***zkSyncMainnet***.
-1. Run ***yarn hardhat deploy-zksync --script deploy-priceOracle.ts*** to deploy priceOracle contract, and set the deployed address as POCAddress in .env.
-1. Run ***yarn hardhat deploy-zksync --script deploy-storageOrder.ts*** to deploy storageOrderCompatible contract, and set the deployed address as SOCAddress in .env.
-1. Run ***yarn hardhat deploy-zksync --script addOrderNode.ts*** to add order node to storage contract.
+1. Change the '**defaultNetwork**' parameter in '**hardhat.config.ts**' to '**zkSyncMainnet**'.
+1. Run '**yarn hardhat deploy-zksync --script deploy-priceOracle.ts**' to deploy priceOracle contract, and set the deployed address as POCAddress in .env.
+1. Run '**yarn hardhat deploy-zksync --script deploy-storageOrder.ts**' to deploy storageOrderCompatible contract, and set the deployed address as SOCAddress in .env.
+1. Run '**yarn hardhat deploy-zksync --script addOrderNode.ts**' to add order node to storage contract.
 
 Note: refer to [this link](https://docs.zksync.io/dev/) for more information about zkSync development.
 
@@ -62,8 +62,17 @@ Functions for users:
 
 js examples:
 ```shell
+const { ethers } = require("ethers");
 // Place order in ETH, you can get the storageOrder contract instance by ethers.js or web3.js as you like
 // For more information please refer to allow "https://docs.ethers.io/v5/" and "https://web3js.readthedocs.io/en/v1.7.3/"
+const provider = new ethers.providers.JsonRpcProvider();
+const signer = new ethers.Wallet(<PRIVATE_KEY>, provider);
+const StorageOrderABI = [
+  "function getPrice(uint size, bool isPermanent) public view returns (uint)",
+  "function placeOrder(string memory cid, uint size, bool isPermanent) external payable",
+  "function placeOrderWithNode(string memory cid, uint size, address nodeAddress, bool isPermanent) public payable",
+]
+const storageOrder = new ethers.Contract(<storage_order_address>, StorageOrderABI, signer);
 const fileCid = "QmfH5zLmBtptUxRSGWazaumGwSsCW3n6P164eRXpbFatmJ";
 const fileSize = 5246268;
 const isPermanent = false;
