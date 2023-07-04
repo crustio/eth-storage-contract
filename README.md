@@ -33,6 +33,17 @@ npx hardhat help
 
 For more information about hardhat, please refer to [hardhat doc](https://hardhat.org/getting-started/)
 
+### Deployment
+
+You can use Remix tool to deploy storage contract to most EVM chains, but for zkSync you must follow the steps:
+
+1. Change the ***defaultNetwork*** parameter in ***hardhat.config.ts*** to ***zkSyncMainnet***.
+1. Run ***yarn hardhat deploy-zksync --script deploy-priceOracle.ts*** to deploy priceOracle contract, and set the deployed address as POCAddress in .env.
+1. Run ***yarn hardhat deploy-zksync --script deploy-storageOrder.ts*** to deploy storageOrderCompatible contract, and set the deployed address as SOCAddress in .env.
+1. Run ***yarn hardhat deploy-zksync --script addOrderNode.ts*** to add order node to storage contract.
+
+Note: refer to [this link](https://docs.zksync.io/dev/) for more information about zkSync development.
+
 ### Usage
 
 Functions for contract owner:

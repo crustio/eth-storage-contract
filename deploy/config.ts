@@ -49,6 +49,6 @@ export const zkSyncNetwork = getParamOrExit("zkSyncNetwork");
 export const zkSyncAccountPRV = getParamOrExit("zkSyncAccountPRV");
 export const POCName = getParamOrExit("POCName");
 export const SOCName = getParamOrExit("SOCName");
-export const POCAddress = getParamOrExit("POCAddress");
+export const POCAddress = getParam("POCAddress");
 export const SOCAddress = getParam("SOCAddress");
 export const orderNode = getParam("orderNode");
