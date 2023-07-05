@@ -65,12 +65,12 @@ js examples:
 const { ethers } = require("ethers");
 // Place order in ETH, you can get the storageOrder contract instance by ethers.js or web3.js as you like
 // For more information please refer to allow "https://docs.ethers.io/v5/" and "https://web3js.readthedocs.io/en/v1.7.3/"
-const provider = new ethers.providers.JsonRpcProvider();
+const provider = new ethers.providers.JsonRpcProvider(<endpoint_rpc>);
 const signer = new ethers.Wallet(<PRIVATE_KEY>, provider);
 const StorageOrderABI = [
   "function getPrice(uint size, bool isPermanent) public view returns (uint)",
   "function placeOrder(string memory cid, uint size, bool isPermanent) external payable",
-  "function placeOrderWithNode(string memory cid, uint size, address nodeAddress, bool isPermanent) public payable",
+  "function placeOrderWithNode(string memory cid, uint size, address nodeAddress, bool isPermanent) public payable"
 ]
 const storageOrder = new ethers.Contract(<storage_order_address>, StorageOrderABI, signer);
 const fileCid = "QmfH5zLmBtptUxRSGWazaumGwSsCW3n6P164eRXpbFatmJ";
