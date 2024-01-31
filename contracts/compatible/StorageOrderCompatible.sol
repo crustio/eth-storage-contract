@@ -14,7 +14,7 @@ contract StorageOrderCompatible is Initializable, OwnableUpgradeable, UUPSUpgrad
     mapping(address => bool) public nodes;
     address[] public nodeArray;
     IPriceOracle public priceOracle;
-    bool private isPriceOracleSet = false;
+    bool private isPriceOracleSet;
 
     event Order(address customer, address merchant, string cid, uint size, uint price, bool isPermanent);
 
@@ -26,6 +26,7 @@ contract StorageOrderCompatible is Initializable, OwnableUpgradeable, UUPSUpgrad
     function initialize() initializer public {
         __Ownable_init();
         __UUPSUpgradeable_init();
+        isPriceOracleSet = false;
     }
 
     function _authorizeUpgrade(address newImplementation)

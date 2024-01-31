@@ -13,7 +13,7 @@ contract PriceOracle is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     uint public servicePriceRate;
     mapping(address => bool) public whiteListMap;
     address[] public whiteListArray;
-    bool private isInitialized = false;
+    bool private isInitialized;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -23,6 +23,8 @@ contract PriceOracle is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     function initialize() initializer public {
         __Ownable_init();
         __UUPSUpgradeable_init();
+
+        isInitialized = false;
     }
 
     function _authorizeUpgrade(address newImplementation)
