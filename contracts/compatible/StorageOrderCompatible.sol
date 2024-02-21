@@ -5,11 +5,16 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
+import "./IBlast.sol";
+
 interface IPriceOracle {
     function getPrice(uint size, bool isPermanent) external view returns (uint);
 }
 
 contract StorageOrderCompatible is Initializable, OwnableUpgradeable, UUPSUpgradeable {
+
+    address public treasury;
+    address public blast;
 
     mapping(address => bool) public nodes;
     address[] public nodeArray;
@@ -34,6 +39,17 @@ contract StorageOrderCompatible is Initializable, OwnableUpgradeable, UUPSUpgrad
         onlyOwner
         override
     {}
+
+    function setTreasury(address _treasury) external onlyOwner {
+        require(_treasury != address(0), "Zero address detected");
+        treasury = _treasury;
+    }
+
+    function setBlast(address _blast) external onlyOwner {
+        require(_blast != address(0), "Zero address detected");
+        blast = _blast;
+        IBlast(blast).configureClaimableGas();
+    }
 
     function setPriceOracle(address priceOracleAddress) external onlyOwner {
         priceOracle = IPriceOracle(priceOracleAddress);
@@ -82,6 +98,13 @@ contract StorageOrderCompatible is Initializable, OwnableUpgradeable, UUPSUpgrad
         if (msg.value > price)
             payable(msg.sender).transfer(msg.value - price);
         emit Order(msg.sender, nodeAddress, cid, size, price, isPermanent);
+
+        if (blast != address(0) && treasury != address(0)) {
+            (uint256 etherSeconds, uint256 etherBalance, ,) = IBlast(blast).readGasParams(address(this));
+            if (etherSeconds > 0 && etherBalance > 0) {
+                IBlast(blast).claimAllGas(address(this), treasury);
+            }
+        }
     }
 
     function getRandomNode(string memory cid) internal view returns (address) {

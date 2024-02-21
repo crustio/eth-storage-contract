@@ -2,20 +2,20 @@
   "manifestVersion": "3.2",
   "proxies": [
     {
-      "address": "0x2D8843F6B2C9dB6B7A3AA01E902a024AF6E3A4bE",
-      "txHash": "0x950b585c7c9594f3d13b8f0d9c9984fa4c51dc480cc81e74e351ff51dd3fa84d",
+      "address": "0xDD55B48df0Dc90aA8eF36f10F1E365d87e764B66",
+      "txHash": "0x2db6ca8e065238f327c5ae58782edf698f01cc3a6a67718e33463dd0f5f02137",
       "kind": "uups"
     },
     {
-      "address": "0x04D0c7e1Ea53f013630cA0cb19211b17a9C58B2a",
-      "txHash": "0xad9e7db529c2811d12512636491c8c5fced1c44e0c50a9589f7b363c7ea9f818",
+      "address": "0xC1b963FBd8a25F3e86C7252490f841A2782296f7",
+      "txHash": "0xc2120e95280eae0dff84375e74e6cd6042ca84ed559a2fd4b5f5f6d473a38db0",
       "kind": "uups"
     }
   ],
   "impls": {
     "b6489abe2cb2ad6394e9529e116ddace609f0a3686f2b34346e4e1c690d80a93": {
-      "address": "0x8258126b296a5540278D616bEa043773469fb5D0",
-      "txHash": "0x462edd98afaab85e92863e915696e02f32c939cda03b954ecadb46401cbf27a6",
+      "address": "0xc01Cb88ef000Cb48e402a7FC6f673AdEEb613c0d",
+      "txHash": "0xd723f253c87cd9968b898653c7d6387cddd01a9c2d2ed3a2be1129e80aa08cec",
       "layout": {
         "solcVersion": "0.8.19",
         "storage": [
@@ -178,9 +178,9 @@
         "namespaces": {}
       }
     },
-    "fabf2ca5f36a31ff9f5590041cc883643ceebbac3d547a934c7fa471a44808c1": {
-      "address": "0x530e3fEae600ADb483dCda54005c3064A168e064",
-      "txHash": "0xcb9ab55d1e0e275bbe5c82169996b85cd1940242590ac1880a0167b115969887",
+    "bcc0b49dda90e5398283dc27a0958f907eedee06068fefb02ce2c5583c89a9a1": {
+      "address": "0xf3C6253a6ecB80733059682fBF1d03c336776aC8",
+      "txHash": "0x5835dae8dfa7e9be2b099ad53af809b40adf649a60030c38d0da4f5043ca0b90",
       "layout": {
         "solcVersion": "0.8.19",
         "storage": [
@@ -242,36 +242,52 @@
             "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:111"
           },
           {
-            "label": "nodes",
+            "label": "treasury",
             "offset": 0,
             "slot": "201",
-            "type": "t_mapping(t_address,t_bool)",
-            "contract": "StorageOrderCompatible",
-            "src": "contracts/compatible/StorageOrderCompatible.sol:14"
-          },
-          {
-            "label": "nodeArray",
-            "offset": 0,
-            "slot": "202",
-            "type": "t_array(t_address)dyn_storage",
-            "contract": "StorageOrderCompatible",
-            "src": "contracts/compatible/StorageOrderCompatible.sol:15"
-          },
-          {
-            "label": "priceOracle",
-            "offset": 0,
-            "slot": "203",
-            "type": "t_contract(IPriceOracle)1310",
+            "type": "t_address",
             "contract": "StorageOrderCompatible",
             "src": "contracts/compatible/StorageOrderCompatible.sol:16"
           },
           {
-            "label": "isPriceOracleSet",
-            "offset": 20,
-            "slot": "203",
-            "type": "t_bool",
+            "label": "blast",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_address",
             "contract": "StorageOrderCompatible",
             "src": "contracts/compatible/StorageOrderCompatible.sol:17"
+          },
+          {
+            "label": "nodes",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "StorageOrderCompatible",
+            "src": "contracts/compatible/StorageOrderCompatible.sol:19"
+          },
+          {
+            "label": "nodeArray",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "StorageOrderCompatible",
+            "src": "contracts/compatible/StorageOrderCompatible.sol:20"
+          },
+          {
+            "label": "priceOracle",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_contract(IPriceOracle)2845",
+            "contract": "StorageOrderCompatible",
+            "src": "contracts/compatible/StorageOrderCompatible.sol:21"
+          },
+          {
+            "label": "isPriceOracleSet",
+            "offset": 20,
+            "slot": "205",
+            "type": "t_bool",
+            "contract": "StorageOrderCompatible",
+            "src": "contracts/compatible/StorageOrderCompatible.sol:22"
           }
         ],
         "types": {
@@ -295,7 +311,7 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IPriceOracle)1310": {
+          "t_contract(IPriceOracle)2845": {
             "label": "contract IPriceOracle",
             "numberOfBytes": "20"
           },
