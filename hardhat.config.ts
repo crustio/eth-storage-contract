@@ -53,6 +53,12 @@ module.exports = {
       url: "https://rpc.ankr.com/eth_goerli",
     },
     // https://docs.blast.io/building/toolkits/hardhat
+    "blast-mainnet": {
+      chainId: 81457,
+      url: "https://blast.blockpi.network/v1/rpc/public",
+      accounts: [deployerKey],
+      // gasPrice: 1000000000,
+    },
     "blast-sepolia": {
       chainId: 168587773,
       url: "https://sepolia.blast.io",
@@ -69,6 +75,7 @@ module.exports = {
     // Obtain one at https://etherscan.io/
     apiKey: {
       "blast-sepolia": "blast-sepolia", // apiKey is not required, just set a placeholder
+      "blast-mainnet": process.env.BLASTSCAN_KEY || "" // for blastscan.io verification
     },
     customChains: [
       {
@@ -77,6 +84,17 @@ module.exports = {
         urls: {
           apiURL: "https://api.routescan.io/v2/network/testnet/evm/168587773/etherscan",
           browserURL: "https://testnet.blastscan.io"
+        }
+      },
+      // https://81457.routescan.io/documentation/recipes/hardhat-verification
+      {
+        network: "blast-mainnet",
+        chainId: 81457,
+        urls: {
+          // apiURL: "https://api.routescan.io/v2/network/mainnet/evm/81457/etherscan",  // for blastexplorer.io verification
+          // browserURL: "https://blastexplorer.io"
+          apiURL: "https://api.blastscan.io/api",   // for blastscan.io verification
+          browserURL: "https://blastscan.io"
         }
       }
     ]

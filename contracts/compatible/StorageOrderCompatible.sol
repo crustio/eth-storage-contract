@@ -6,6 +6,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 import "./IBlast.sol";
+import "./IBlastPoints.sol";
 
 interface IPriceOracle {
     function getPrice(uint size, bool isPermanent) external view returns (uint);
@@ -15,6 +16,8 @@ contract StorageOrderCompatible is Initializable, OwnableUpgradeable, UUPSUpgrad
 
     address public treasury;
     address public blast;
+    address public blastPointsAddress;
+    address public blastPointsOperator;
 
     mapping(address => bool) public nodes;
     address[] public nodeArray;
@@ -49,6 +52,13 @@ contract StorageOrderCompatible is Initializable, OwnableUpgradeable, UUPSUpgrad
         require(_blast != address(0), "Zero address detected");
         blast = _blast;
         IBlast(blast).configureClaimableGas();
+    }
+
+    function setBlastPointsAddress(address _blastPointsAddress, address _blastPointsOperator) external onlyOwner {
+        require(_blastPointsAddress != address(0) && _blastPointsOperator != address(0), "Zero address detected");
+        blastPointsAddress = _blastPointsAddress;
+        blastPointsOperator = _blastPointsOperator;
+        IBlastPoints(blastPointsAddress).configurePointsOperator(blastPointsOperator);
     }
 
     function setPriceOracle(address priceOracleAddress) external onlyOwner {
