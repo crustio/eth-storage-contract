@@ -65,6 +65,19 @@ module.exports = {
       accounts: [deployerKey],
       gasPrice: 1000000000,
     },
+      // https://docs.base.org/docs/tools/hardhat
+    "base-mainnet": {
+      chainId: 8453,
+      url: "https://mainnet.base.org",
+      accounts: [deployerKey],
+      gasPrice: 1000000000,
+    },
+    "base-sepolia": {
+      chainId: 84532,
+      url: "https://sepolia.base.org",
+      accounts: [deployerKey],
+      gasPrice: 1000000000,
+    },
   },
   typechain: {
     outDir: "typechain",
@@ -75,7 +88,8 @@ module.exports = {
     // Obtain one at https://etherscan.io/
     apiKey: {
       "blast-sepolia": "blast-sepolia", // apiKey is not required, just set a placeholder
-      "blast-mainnet": process.env.BLASTSCAN_KEY || "" // for blastscan.io verification
+      "blast-mainnet": process.env.BLASTSCAN_KEY || "", // for blastscan.io verification
+      "base-mainnet": process.env.BASESCAN_KEY || "", 
     },
     customChains: [
       {
@@ -96,7 +110,15 @@ module.exports = {
           apiURL: "https://api.blastscan.io/api",   // for blastscan.io verification
           browserURL: "https://blastscan.io"
         }
-      }
+      },
+      {
+        network: "base-mainnet",
+        chainId: 8453,
+        urls: {
+          apiURL: "https://api.basescan.org/api",
+          browserURL: "https://basescan.org"
+        }
+      },
     ]
   },
   solidity: {
