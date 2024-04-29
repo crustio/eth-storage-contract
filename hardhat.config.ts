@@ -10,6 +10,7 @@ require("@nomiclabs/hardhat-waffle");
 
 import "@typechain/hardhat";
 import '@openzeppelin/hardhat-upgrades';
+import { network } from "hardhat";
 
 dotenv.config();
 
@@ -78,6 +79,12 @@ module.exports = {
       accounts: [deployerKey],
       gasPrice: 1000000000,
     },
+    "crust-evm-parachain-test": {
+      chainId: 366666,
+      url: "https://fraa-flashbox-2952-rpc.a.stagenet.tanssi.network",
+      accounts: [deployerKey],
+      verifyURL: ""
+    }
   },
   typechain: {
     outDir: "typechain",
@@ -90,6 +97,7 @@ module.exports = {
       "blast-sepolia": "blast-sepolia", // apiKey is not required, just set a placeholder
       "blast-mainnet": process.env.BLASTSCAN_KEY || "", // for blastscan.io verification
       "base-mainnet": process.env.BASESCAN_KEY || "", 
+      "crust-evm-parachain-test": process.env.CRUST_EVM_PARACHAIN_KEY || "",
     },
     customChains: [
       {
@@ -119,6 +127,15 @@ module.exports = {
           browserURL: "https://basescan.org"
         }
       },
+      {
+        network: "crust-evm-parachain-test",
+        chainId: 366666,
+        urls: {
+          apiURL: "https://fraa-flashbox-2952-rpc.a.stagenet.tanssi.network",
+          browserURL: "https://evmexplorer.tanssi-chains.network",
+          
+        }
+      }
     ]
   },
   solidity: {
