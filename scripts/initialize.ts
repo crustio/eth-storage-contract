@@ -9,7 +9,6 @@ import {
 
 dotenv.config();
 
-// base-mainnet
 const priceOracleAddress = '0xF878bEa1De447d5330ab17f7a62f421695ba09A5';
 const storageOrderCompatibleAddress = '0xf063A29f03d0A02FD96f270EE4F59158EF3d4860';
 
@@ -37,7 +36,7 @@ async function initBlast(signer: SignerWithAddress) {
   console.log(`Set StorageOrderCompatible's blast points address to ${blastPointsAddress} with operator ${blastPointsOperator}`);
 }
 
-// $ hh run scripts/initialize.ts --network [blast-mainnet/base-mainnet]
+// $ hh run scripts/initialize.ts --network [mainnet/op-mainnet/arb-mainnet/blast-mainnet/base-mainnet]
 async function main() {
   const [signer]: SignerWithAddress[] = await ethers.getSigners();
   console.log(`Signer address: ${signer.address}`);

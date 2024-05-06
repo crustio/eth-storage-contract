@@ -4,8 +4,8 @@ import {
   PriceOracle__factory
 } from '../typechain';
 
-// $ hh run scripts/deploy.ts --network [blast-mainnet/base-mainnet]
-// $ hh verify --network [blast-mainnet/base-mainnet] <addresse> <args>
+// $ hh run scripts/deploy.ts --network [mainnet/op-mainnet/arb-mainnet/blast-mainnet/base-mainnet]
+// $ hh verify --network [mainnet/op-mainnet/arb-mainnet/blast-mainnet/base-mainnet] <addresse> <args>
 async function main() {
   const PriceOracleFactory = await ethers.getContractFactory("PriceOracle");
   const PriceOracle = await upgrades.deployProxy(PriceOracleFactory, []);

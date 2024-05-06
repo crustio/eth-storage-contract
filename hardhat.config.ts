@@ -15,6 +15,7 @@ import { network } from "hardhat";
 dotenv.config();
 
 const deployerKey: string = process.env.DEPLOYER_KEY || "";
+const infuraKey: string = process.env.INFURA_KEY || "";
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -35,6 +36,11 @@ module.exports = {
   defaultNetwork: "zkSyncMainnet",
 
   networks: {
+    mainnet: {
+      chainId: 1,
+      url: `https://mainnet.infura.io/v3/${infuraKey}`,
+      accounts: [deployerKey],
+    },
     zkSyncMainnet: {
       url: "https://mainnet.era.zksync.io",
       ethNetwork: "mainnet", // RPC URL of the network (e.g. `https://goerli.infura.io/v3/<API_KEY>`)
@@ -47,11 +53,18 @@ module.exports = {
       zksync: true,
       verifyURL: 'https://zksync2-testnet-explorer.zksync.dev/contract_verification'
     },
-    ethMainnet: {
-      url: "https://mainnet.infura.io/v3",
-    },
     ethGoerli: {
       url: "https://rpc.ankr.com/eth_goerli",
+    },
+    "op-mainnet": {
+      chainId: 10,
+      url: `https://optimism-mainnet.infura.io/v3/${infuraKey}`,
+      accounts: [deployerKey],
+    },
+    "arb-mainnet": {
+      chainId: 42161,
+      url: `https://arbitrum-mainnet.infura.io/v3/${infuraKey}`,
+      accounts: [deployerKey],
     },
     // https://docs.blast.io/building/toolkits/hardhat
     "blast-mainnet": {
@@ -94,6 +107,9 @@ module.exports = {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
     apiKey: {
+      mainnet: process.env.ETHERSCAN_KEY || "",
+      optimisticEthereum: process.env.OP_ETHERSCAN_KEY || '',
+      arbitrumOne: process.env.ARBSCAN_KEY || '',
       "blast-sepolia": "blast-sepolia", // apiKey is not required, just set a placeholder
       "blast-mainnet": process.env.BLASTSCAN_KEY || "", // for blastscan.io verification
       "base-mainnet": process.env.BASESCAN_KEY || "", 
