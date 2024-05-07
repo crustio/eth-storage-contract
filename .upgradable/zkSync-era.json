@@ -1,0 +1,349 @@
+{
+  "manifestVersion": "3.2",
+  "proxies": [
+    {
+      "address": "0x25da536a3FfedF57ef746ebb79f1fa82e60eA7D0",
+      "txHash": "0x9bf3fd48a9943a017f90bfea3a2736c3f00f118d994456e2a80595606e509c63",
+      "kind": "uups"
+    },
+    {
+      "address": "0x61ecfA2C8dF06A4f941A8529E4B707488B74e3bE",
+      "txHash": "0xddad5d963257bba9facde36a1c49749bacc31e7cc7d995dacea908c4f9e775f7",
+      "kind": "uups"
+    }
+  ],
+  "impls": {
+    "70ed6cc84a1d88d36611a807b132e71d3ca120cca77bfc7100750ad69c64ffcd": {
+      "address": "0x4A8E31F931FA2DEc73F06Ef8F6ED640B7766E409",
+      "txHash": "0x0006078844ca3f20f6c95e3cff241d370c6a297b204095ecdbb697d67ae2d2a0",
+      "layout": {
+        "solcVersion": "0.8.19",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:68"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:40"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:169"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:111"
+          },
+          {
+            "label": "basePrice",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_uint256",
+            "contract": "PriceOracle",
+            "src": "contracts/compatible/PriceOracle.sol:9"
+          },
+          {
+            "label": "bytePrice",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_uint256",
+            "contract": "PriceOracle",
+            "src": "contracts/compatible/PriceOracle.sol:10"
+          },
+          {
+            "label": "CRUETHRATE",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_uint256",
+            "contract": "PriceOracle",
+            "src": "contracts/compatible/PriceOracle.sol:11"
+          },
+          {
+            "label": "sizeLimit",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_uint256",
+            "contract": "PriceOracle",
+            "src": "contracts/compatible/PriceOracle.sol:12"
+          },
+          {
+            "label": "servicePriceRate",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_uint256",
+            "contract": "PriceOracle",
+            "src": "contracts/compatible/PriceOracle.sol:13"
+          },
+          {
+            "label": "whiteListMap",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PriceOracle",
+            "src": "contracts/compatible/PriceOracle.sol:14"
+          },
+          {
+            "label": "whiteListArray",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PriceOracle",
+            "src": "contracts/compatible/PriceOracle.sol:15"
+          },
+          {
+            "label": "isInitialized",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_bool",
+            "contract": "PriceOracle",
+            "src": "contracts/compatible/PriceOracle.sol:16"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "83d02f884163e5e2c20ae48447ae744be28afabe459f5349c2221eddb8a6fac4": {
+      "address": "0xE5B1Bd0Cf16A3B6d4c096eeb0b6388DAE2faE22A",
+      "txHash": "0xcde7406bfb599006361d57579f17dcf4915998ab68c6a7469628d97015064066",
+      "layout": {
+        "solcVersion": "0.8.19",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:68"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:40"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:169"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:111"
+          },
+          {
+            "label": "treasury",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_address",
+            "contract": "StorageOrderCompatible",
+            "src": "contracts/compatible/StorageOrderCompatible.sol:17"
+          },
+          {
+            "label": "blast",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_address",
+            "contract": "StorageOrderCompatible",
+            "src": "contracts/compatible/StorageOrderCompatible.sol:18"
+          },
+          {
+            "label": "blastPointsAddress",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_address",
+            "contract": "StorageOrderCompatible",
+            "src": "contracts/compatible/StorageOrderCompatible.sol:19"
+          },
+          {
+            "label": "blastPointsOperator",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_address",
+            "contract": "StorageOrderCompatible",
+            "src": "contracts/compatible/StorageOrderCompatible.sol:20"
+          },
+          {
+            "label": "nodes",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "StorageOrderCompatible",
+            "src": "contracts/compatible/StorageOrderCompatible.sol:22"
+          },
+          {
+            "label": "nodeArray",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "StorageOrderCompatible",
+            "src": "contracts/compatible/StorageOrderCompatible.sol:23"
+          },
+          {
+            "label": "priceOracle",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_contract(IPriceOracle)4471",
+            "contract": "StorageOrderCompatible",
+            "src": "contracts/compatible/StorageOrderCompatible.sol:24"
+          },
+          {
+            "label": "isPriceOracleSet",
+            "offset": 20,
+            "slot": "207",
+            "type": "t_bool",
+            "contract": "StorageOrderCompatible",
+            "src": "contracts/compatible/StorageOrderCompatible.sol:25"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IPriceOracle)4471": {
+            "label": "contract IPriceOracle",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}

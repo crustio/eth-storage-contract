@@ -1,16 +1,14 @@
 import dotenv from "dotenv";
-// import "@matterlabs/hardhat-zksync-deploy";
-// import "@matterlabs/hardhat-zksync-solc";
-// import '@matterlabs/hardhat-zksync-upgradable';
-// import "@matterlabs/hardhat-zksync-verify";
 
-require('@nomiclabs/hardhat-ethers');
-require("@nomiclabs/hardhat-etherscan");
-require("@nomiclabs/hardhat-waffle");
+/************* For zkSync only *************/
+import "@matterlabs/hardhat-zksync";
 
-import "@typechain/hardhat";
-import '@openzeppelin/hardhat-upgrades';
-import { network } from "hardhat";
+/************* For non-zkSync **********/
+// require('@nomiclabs/hardhat-ethers');
+// require("@nomiclabs/hardhat-etherscan");
+// require("@nomiclabs/hardhat-waffle");
+// import "@typechain/hardhat";
+// import '@openzeppelin/hardhat-upgrades';
 
 dotenv.config();
 
@@ -29,11 +27,13 @@ const infuraKey: string = process.env.INFURA_KEY || "";
 
 module.exports = {
   zksolc: {
-    version: "1.3.10",
-    compilerSource: "binary",
-    settings: {},
+    version: "latest",
+    settings: {
+      // find all available options in the official documentation
+      // https://era.zksync.io/docs/tools/hardhat/hardhat-zksync-solc.html#configuration
+    },
   },
-  defaultNetwork: "zkSyncMainnet",
+  // defaultNetwork: "zkSyncMainnet",
 
   networks: {
     mainnet: {
@@ -45,13 +45,13 @@ module.exports = {
       url: "https://mainnet.era.zksync.io",
       ethNetwork: "mainnet", // RPC URL of the network (e.g. `https://goerli.infura.io/v3/<API_KEY>`)
       zksync: true,
-      verifyURL: 'https://zksync2-mainnet-explorer.zksync.io/contract_verification'
+      verifyURL: 'https://zksync2-mainnet-explorer.zksync.io/contract_verification',
     },
-    zkSyncTestnet: {
-      url: "https://testnet.era.zksync.dev",
-      ethNetwork: "goerli", // RPC URL of the network (e.g. `https://goerli.infura.io/v3/<API_KEY>`)
+    zkSyncSepolia: {
+      url: "https://sepolia.era.zksync.dev",
+      ethNetwork: "sepolia",
       zksync: true,
-      verifyURL: 'https://zksync2-testnet-explorer.zksync.dev/contract_verification'
+      verifyURL: "https://explorer.sepolia.era.zksync.dev/contract_verification",
     },
     ethGoerli: {
       url: "https://rpc.ankr.com/eth_goerli",
