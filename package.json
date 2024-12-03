@@ -37,8 +37,20 @@
     "hardhat": "^2.15.0",
     "ts-node": "^10.9.1",
     "typechain": "^8.3.2",
-    "typescript": "^5.1.3",
-    "zksync-ethers": "^5.7.0",
+    "typescript": "^5.1.3"
+  },
+  "resolutions": {
+    "usb": "1.8.x",
+    "@polkadot/util": "10.3.1"
+  },
+  "dependencies": {
+    "@crustio/type-definitions": "^1.3.0",
+    "@matterlabs/hardhat-zksync-deploy": "^1.3.0",
+    "@openzeppelin/contracts": "^4.9.2",
+    "@openzeppelin/contracts-upgradeable": "^4.9.2",
+    "@polkadot/api": "9.x",
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "zksync-web3": "^0.17.1"
   }
 }

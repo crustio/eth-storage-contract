@@ -8,7 +8,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 contract PriceOracle is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     uint public basePrice;
     uint public bytePrice;
-    uint public CRUETHRATE;
+    uint public CRUETHRATE;// decimals 5
     uint public sizeLimit;
     uint public servicePriceRate;
     mapping(address => bool) public whiteListMap;
@@ -94,10 +94,9 @@ contract PriceOracle is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     function getPrice(uint size, bool isPermanent) external view returns (uint) {
         require(isInitialized, "Please invoke reInitialize function to initialize parameters");
         require(sizeLimit >= size, "Size exceeds the limit");
-        uint price = (basePrice + size * bytePrice / (1024**2)) * (servicePriceRate + 100) / 100 / CRUETHRATE * (10**6);
+        uint price = (basePrice + size * bytePrice / (1024**2)) * (servicePriceRate + 100) / 100  * (10**5) / CRUETHRATE * (10**6);
         if (isPermanent)
             price = price * 200;
-
         return price;
     }
 

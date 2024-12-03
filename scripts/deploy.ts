@@ -1,21 +1,18 @@
 
 import { ethers, upgrades } from "hardhat";
-import {
-  PriceOracle__factory
-} from '../typechain';
 
 // $ hh run scripts/deploy.ts --network [mainnet/op-mainnet/arb-mainnet/blast-mainnet/base-mainnet]
 // $ hh verify --network [mainnet/op-mainnet/arb-mainnet/blast-mainnet/base-mainnet] <addresse> <args>
 async function main() {
   const PriceOracleFactory = await ethers.getContractFactory("PriceOracle");
   const PriceOracle = await upgrades.deployProxy(PriceOracleFactory, []);
-  const priceOracle = PriceOracle__factory.connect(PriceOracle.address, ethers.provider);
+  const priceOracle = PriceOracleFactory.attach(PriceOracle.address).connect(ethers.provider);
   // const priceOracle = PriceOracle__factory.connect('', ethers.provider);
   console.log(`Deployed PriceOracle to ${priceOracle.address}`);
 
   const StorageOrderCompatibleFactory = await ethers.getContractFactory("StorageOrderCompatible");
   const StorageOrderCompatible = await upgrades.deployProxy(StorageOrderCompatibleFactory, []);
-  const storageOrderCompatible = PriceOracle__factory.connect(StorageOrderCompatible.address, ethers.provider);
+  const storageOrderCompatible = PriceOracleFactory.attach(StorageOrderCompatible.address).connect(ethers.provider);
   // const storageOrderCompatible = StorageOrderCompatible__factory.connect('', ethers.provider);
   console.log(`Deployed StorageOrderCompatible to ${storageOrderCompatible.address}`);
 }

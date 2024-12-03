@@ -97,6 +97,16 @@ module.exports = {
       url: "https://fraa-flashbox-2952-rpc.a.stagenet.tanssi.network",
       accounts: [deployerKey],
       verifyURL: ""
+    },
+    "oasis-sapphire": {
+      chainId: 23294,
+      url: "https://sapphire.oasis.io",
+      accounts: [deployerKey],
+    },
+    "u2u": {
+      chainId: 39,
+      url: "https://rpc-mainnet.u2u.xyz",
+      accounts: [deployerKey],
     }
   },
   typechain: {
