@@ -1,14 +1,14 @@
 import dotenv from "dotenv";
 
 /************* For zkSync only *************/
-import "@matterlabs/hardhat-zksync";
+// import "@matterlabs/hardhat-zksync";
 
 /************* For non-zkSync **********/
-// require('@nomiclabs/hardhat-ethers');
-// require("@nomiclabs/hardhat-etherscan");
-// require("@nomiclabs/hardhat-waffle");
-// import "@typechain/hardhat";
-// import '@openzeppelin/hardhat-upgrades';
+require('@nomiclabs/hardhat-ethers');
+require("@nomiclabs/hardhat-etherscan");
+require("@nomiclabs/hardhat-waffle");
+import "@typechain/hardhat";
+import '@openzeppelin/hardhat-upgrades';
 
 dotenv.config();
 
@@ -106,6 +106,11 @@ module.exports = {
     "u2u": {
       chainId: 39,
       url: "https://rpc-mainnet.u2u.xyz",
+      accounts: [deployerKey],
+    },
+    "hedera": {
+      chainId: 295,
+      url: "https://mainnet.hashio.io/api",
       accounts: [deployerKey],
     }
   },

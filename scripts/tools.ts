@@ -67,6 +67,7 @@ export async function setParams(priceOracle: string, params: Partial<{ serverPri
   const { serverPriceRate = 15, sizeLimit = 200 * 1024 * 1024, CRU_Native_RATE = 5000 } = params;
   const { baseFee, byteFee } = await getCrustFileFee();
   // Set price
+
   await priceOracleImp
     .connect(deployer)
     .reInitialize(baseFee, byteFee, serverPriceRate, sizeLimit, parseUnits(`${CRU_Native_RATE}`, 5))
@@ -80,11 +81,12 @@ export async function testPlaceOrder(storage: string) {
   const storageImp = storageFactory.attach(storage).connect(deployer);
   const price = await storageImp.getPrice(5246268, false);
   console.log(`Price: ${ethers.utils.formatEther(price)} $ETH`);
-  await storageImp
-    .connect(deployer)
-    .placeOrder("QmfH5zLmBtptUxRSGWazaumGwSsCW3n6P164eRXpbFatmJ", 5246268, false, { value: price })
-    .then((tx) => tx.wait(2));
-  console.log(`Placed order success`);
+  console.log(`Balance: ${ethers.utils.formatEther(await deployer.getBalance())}`)
+  // await storageImp
+  //   .connect(deployer)
+  //   .placeOrder("QmfH5zLmBtptUxRSGWazaumGwSsCW3n6P164eRXpbFatmJ", 5246268, false, { value: price })
+  //   .then((tx) => tx.wait(2));
+  // console.log(`Placed order success`);
 }
 
 // getCrustFileFee()
